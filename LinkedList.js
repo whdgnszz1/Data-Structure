@@ -19,16 +19,33 @@ class LinkedList {
 
   // index가 몇번 넘기는지를 의미
   search(index) {
+    return this.#search(index)[1]?.value;
+  }
+
+  #search(index) {
     let count = 0;
+    let prev;
     let current = this.head;
     while (count < index) {
+      prev = current;
       current = current?.next;
       count++;
     }
-    return current?.value;
+    return [prev, current];
   }
 
-  remove(value) {}
+  remove(index) {
+    const [prev, current] = this.#search(index);
+    if (prev && current) {
+      prev.next = current.next;
+      this.length--;
+      return this.length;
+    } else if(current) {
+      // index가 0일때
+      this.head = current.next
+      return this.length
+    } 
+  }
 }
 
 class Node {
@@ -47,10 +64,11 @@ ll.add(3);
 ll.add(4);
 ll.add(5);
 ll.add(6);
-console.log(ll.search(3)); // 4
-console.log(ll.search(5)); // 6
-console.log(ll.search(7)); // undefined
+ll.search(6); // undefined
+ll.remove(4);
+ll.search(4); // 6
+ll.remove(4);
+ll.search(4); // undefined
+ll.search(4); // undefined
 
-// ll.search(7); // null
-// ll.remove(4);
-// ll.search(4); // null
+console.log("hi");
