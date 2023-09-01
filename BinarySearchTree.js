@@ -10,7 +10,7 @@ class BinarySearchTree {
       } else {
         node.left = new Node(value);
       }
-    } else if(node.value < value) {
+    } else if (node.value < value) {
       // 루트 노드보다 큰값이면
       if (node.right) {
         this.#insert(node.right, value);
@@ -18,7 +18,6 @@ class BinarySearchTree {
         node.right = new Node(value);
       }
     } else {
-      
     }
   }
 
@@ -31,7 +30,39 @@ class BinarySearchTree {
     // 같은 값을 넣을 경우 에러처리
   }
 
-  search(value) {}
+  #search(node, value) {
+    if (node.value > value) {
+      // 더 작은값 찾을때
+      if (!node.left) {
+        return null;
+      }
+      if (node.left.value === value) {
+        return node.left;
+      }
+      return this.#search(node.left, value);
+    } else if (node.value < value) {
+      if (!node.right) {
+        return null;
+      }
+      if (node.right.value === value) {
+        return node.right;
+      }
+      return this.#search(node.right, value);
+    }
+  }
+
+  search(value) {
+    if (!this.root) {
+      return null;
+    }
+    if (this.root.value === value) {
+      return this.root;
+    }
+    this.#search(this.root, value);
+  }
+
+
+  // 양팔인애: 자기 왼쪽중에서 가장 오른쪽
   remove(value) {}
 }
 
