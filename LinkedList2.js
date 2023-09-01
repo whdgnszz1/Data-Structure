@@ -1,75 +1,71 @@
 class LinkedList {
   length = 0;
-  // 처음에 있는 것
   head = null;
+  tail = null;
 
   add(value) {
+    const newNode = new Node(value);
     if (this.head) {
-      let current = this.head;
-      while (current.next) {
-        current = current.next;
-      }
-      current.next = new Node(value);
+      newNode.prev = this.tail;
+      this.tail.next = newNode;
+      this.tail = newNode;
     } else {
-      this.head = new Node(value);
+      this.head = newNode;
+      this.tail = newNode;
     }
     this.length++;
     return this.length;
   }
 
-  // index가 몇번 넘기는지를 의미
   search(index) {
     return this.#search(index)[1]?.value;
   }
 
   #search(index) {
+    if (index < 0 || index >= this.length) return [null, null];
+
     let count = 0;
-    let prev;
     let current = this.head;
     while (count < index) {
-      prev = current;
       current = current?.next;
       count++;
     }
-    return [prev, current];
+    return [current?.prev, current];
   }
 
   remove(index) {
     const [prev, current] = this.#search(index);
     if (prev && current) {
       prev.next = current.next;
+      if (current.next) {
+        current.next.prev = prev;
+      } else {
+        // 마지막 노드일 경우
+        this.tail = prev;
+      }
       this.length--;
       return this.length;
     } else if (current) {
       // index가 0일때
       this.head = current.next;
+      if (this.head) {
+        this.head.prev = null;
+      } else {
+        // 리스트가 빈 경우
+        this.tail = null;
+      }
+      this.length--;
       return this.length;
-    }
+    } 
+    // 삭제하고자 하는 대상이 없을때
+    return -1;
   }
 }
 
 class Node {
-  prev = null;
   next = null;
-  // 외부에서 전달받을 값은 constructor 써줘야함.
+  prev = null;
   constructor(value) {
     this.value = value;
   }
 }
-
-const ll = new LinkedList();
-ll.length;
-ll.add(1);
-ll.add(2);
-ll.add(3);
-ll.add(4);
-ll.add(5);
-ll.add(6);
-ll.search(6); // undefined
-ll.remove(4);
-ll.search(4); // 6
-ll.remove(4);
-ll.search(4); // undefined
-ll.search(4); // undefined
-
-console.log("hi");
